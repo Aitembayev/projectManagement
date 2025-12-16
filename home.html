@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-end justify-content-between mb-3">
+  <div>
+    <h2 class="km-title mb-1">Каталог</h2>
+    {% if q %}
+      <div class="km-muted">Поиск: <strong>{{ q }}</strong></div>
+    {% endif %}
+  </div>
+
+  <a href="{% url 'shop:cart' %}" class="cart-back">🛒 Корзина</a>
+</div>
+
+<div class="row g-3">
+  {% for product in products %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="p-card">
+
+        <a class="p-thumb" href="{% url 'shop:product_detail' product.id %}">
+          <img src="{{ product.image.url }}" alt="{{ product.title }}">
+          <span class="p-like" title="В избранное">♡</span>
+          <span class="p-badge">HIT</span>
+        </a>
+
+        <div class="p-body">
+          <div class="p-price">
+            <span class="p-price-new">{{ product.price }} ₸</span>
+          </div>
+
+          <div class="p-title" title="{{ product.title }}">
+            {{ product.title }}
+          </div>
+
+          <div class="p-meta">
+            <span class="p-rating">★ 4.8</span>
+            <span class="p-dot">•</span>
+            <span class="p-cat">
+              {% if product.category %}{{ product.category.name }}{% else %}Без категории{% endif %}
+            </span>
+          </div>
+
+          <div class="p-actions">
+            <a class="p-btn" href="{% url 'shop:add_to_cart' product.id %}">
+              В корзину
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {% empty %}
+    <p class="km-muted">Ничего не найдено.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Steppe Goods{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+<header class="km-header">
+  <div class="container">
+    <div class="km-topbar">
+      <a class="km-brand" href="/">Steppe Goods</a>
+
+      <!-- Поиск -->
+      <form class="km-search" action="/" method="get">
+        {% if active_cat %}
+          <input type="hidden" name="cat" value="{{ active_cat }}">
+        {% endif %}
+        <input
+          type="text"
+          name="q"
+          value="{{ q|default:'' }}"
+          placeholder="Найти товары в Kaz Marketplace…"
+          aria-label="Search"
+        >
+        <button type="submit">Поиск</button>
+      </form>
+
+      <a class="km-cart" href="/cart/">🛒 Корзина</a>
+    </div>
+
+    <!-- Категории -->
+    {% if categories %}
+      <div class="km-cats">
+        <a class="km-cat {% if not active_cat %}active{% endif %}" href="/{% if q %}?q={{ q }}{% endif %}">
+          Все
+        </a>
+
+        {% for c in categories %}
+          <a
+            class="km-cat {% if active_cat == c.id|stringformat:'s' %}active{% endif %}"
+            href="/?cat={{ c.id }}{% if q %}&q={{ q }}{% endif %}"
+          >
+            {{ c.name }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+<main class="container km-main">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>

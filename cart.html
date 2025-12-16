@@ -1,0 +1,59 @@
+{# templates/home.html #}
+{% extends "base.html" %}
+{% block title %}Каталог{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-3">
+  <div>
+    <h2 class="km-title mb-1">Каталог товаров</h2>
+    {% if q %}
+      <div class="km-muted">Поиск: <strong>{{ q }}</strong></div>
+    {% else %}
+      <div class="km-muted">Выберите товары и добавляйте в корзину</div>
+    {% endif %}
+  </div>
+
+  <div class="d-flex gap-2">
+    <a href="{% url 'shop:home' %}" class="cart-back">← На главную</a>
+    <a href="{% url 'shop:cart' %}" class="cart-back">🛒 Корзина</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  {% for product in products %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="p-card">
+        <a class="p-thumb" href="{% url 'shop:product_detail' product.id %}">
+          <img src="{{ product.image.url }}" alt="{{ product.title }}">
+          <span class="p-like" title="В избранное">♡</span>
+          <span class="p-badge">HIT</span>
+        </a>
+
+        <div class="p-body">
+          <div class="p-price">
+            <span class="p-price-new">{{ product.price }} ₸</span>
+            {% if product.old_price %}
+              <span class="p-price-old">{{ product.old_price }} ₸</span>
+            {% endif %}
+          </div>
+
+          <div class="p-title">{{ product.title }}</div>
+
+          <div class="p-actions">
+            <a class="btn btn-main w-100" href="{% url 'shop:add_to_cart' product.id %}">
+              В корзину
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="empty-cart">
+        <div class="empty-title">Товаров пока нет</div>
+        <div class="km-muted">Добавьте товары через админку.</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
